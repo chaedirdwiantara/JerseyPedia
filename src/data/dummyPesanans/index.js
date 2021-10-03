@@ -68,7 +68,7 @@ export const dummyPesanans = [
   },
   {
     id: 2,
-    tanggalPemesanan: 'Jumat, 18 September 2020',
+    tanggalPemesanan: 'Jumat, 19 September 2020',
     status: 'lunas',
     totalHarga: 375000,
     berat: 0.75,
