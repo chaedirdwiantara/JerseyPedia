@@ -11,6 +11,7 @@ const Inputan = ({
   label,
   value,
   secureTextEntry,
+  keyboardType,
 }) => {
   if (textarea) {
     return (
@@ -32,6 +33,7 @@ const Inputan = ({
         style={styles.input(width, height, fontSize)}
         value={value}
         secureTextEntry={secureTextEntry}
+        keyboardType={keyboardType}
       />
     </View>
   );

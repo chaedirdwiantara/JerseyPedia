@@ -9,6 +9,7 @@ import EditProfile from './EditProfile';
 import ChangePassword from './ChangePassword';
 import History from './History';
 import Login from './Login';
+import Register1 from './Register/Register1';
 
 export {
   Home,
@@ -22,4 +23,5 @@ export {
   ChangePassword,
   History,
   Login,
+  Register1,
 };

@@ -20,7 +20,11 @@ export default class Login extends Component {
 
         <View style={styles.register}>
           <Text style={styles.textBlue}>Belum Punya Akun ?</Text>
-          <Text style={styles.textBlue}>Klik Untuk Daftar</Text>
+          <Text
+            style={styles.textBlue}
+            onPress={() => this.props.navigation.navigate('Register1')}>
+            Klik Untuk Daftar
+          </Text>
         </View>
         <View style={styles.ilustrasi}>
           <Ilustrasi />
