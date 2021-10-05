@@ -11,8 +11,10 @@ import {
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../utils';
 import {IlustrasiRegister2} from '../../assets';
 import {Inputan, Jarak, Tombol, Pilihan} from '../../components';
+import {connect} from 'react-redux';
+import {getProvinsiList} from '../../actions/RajaOngkirAction';
 
-export default class Register2 extends Component {
+class Register2 extends Component {
   constructor(props) {
     super(props);
 
@@ -22,8 +24,13 @@ export default class Register2 extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.dispatch(getProvinsiList());
+  }
+
   render() {
     const {dataKota, dataProvinsi} = this.state;
+    const {getProvinsiResult} = this.props;
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -52,7 +59,10 @@ export default class Register2 extends Component {
             <View style={styles.card}>
               <Inputan label="Alamat" textarea />
 
-              <Pilihan label="Profinvi" datas={dataProvinsi} />
+              <Pilihan
+                label="Provinsi"
+                datas={getProvinsiResult ? getProvinsiResult : []}
+              />
               <Pilihan label="Kota/Kab" datas={dataKota} />
               <Jarak height={25} />
               <Tombol
@@ -70,6 +80,12 @@ export default class Register2 extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  getProvinsiResult: state.RajaOngkirReducer.getProvinsiResult,
+});
+
+export default connect(mapStateToProps, null)(Register2);
 
 const styles = StyleSheet.create({
   page: {
