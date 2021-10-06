@@ -65,7 +65,7 @@ export const getProvinsiList = () => {
   };
 };
 
-export const getKotaList = provinsi => {
+export const getKotaList = provinsi_id => {
   return dispatch => {
     // LOADING
     dispatch({
@@ -79,7 +79,7 @@ export const getKotaList = provinsi => {
 
     axios({
       method: 'get',
-      url: API_RAJAONGKIR + 'city?province=' + provinsi,
+      url: API_RAJAONGKIR + 'city?province=' + provinsi_id,
       timeout: API_TIMEOUT,
       headers: API_HEADER_RAJAONGKIR,
     })

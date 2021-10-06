@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   ScrollView,
+  Alert,
 } from 'react-native';
 import {colors, fonts, responsiveHeight, responsiveWidth} from '../../utils';
 import {IlustrasiRegister2} from '../../assets';
@@ -19,9 +20,9 @@ class Register2 extends Component {
     super(props);
 
     this.state = {
-      kota: '',
-      provinsi: '',
-      dataKota: [],
+      alamat: '',
+      kota: false,
+      provinsi: false,
     };
   }
 
@@ -37,8 +38,28 @@ class Register2 extends Component {
     this.props.dispatch(getKotaList(provinsi));
   };
 
+  onContinue = () => {
+    const {kota, provinsi, alamat} = this.state;
+
+    if (kota && provinsi && alamat) {
+      const data = {
+        nama: this.props.route.params.nama,
+        email: this.props.route.params.email,
+        nohp: this.props.route.params.nohp,
+        alamat: alamat,
+        provinsi: provinsi,
+        kota: kota,
+        status: 'user',
+      };
+      //ke auth action
+      console.log('Data: ', data);
+    } else {
+      Alert.alert('Error', 'Alama, Kota, dan Provinsi harus diisi');
+    }
+  };
+
   render() {
-    const {dataKota, kota, provinsi} = this.state;
+    const {kota, provinsi, alamat} = this.state;
     const {getProvinsiResult, getKotaResult} = this.props;
 
     return (
@@ -67,7 +88,12 @@ class Register2 extends Component {
             </View>
 
             <View style={styles.card}>
-              <Inputan label="Alamat" textarea />
+              <Inputan
+                label="Alamat"
+                textarea
+                onChangeText={alamat => this.setState({alamat})}
+                value={alamat}
+              />
 
               <Pilihan
                 label="Provinsi"
@@ -88,7 +114,7 @@ class Register2 extends Component {
                 icon="submit"
                 padding={10}
                 fontSize={18}
-                onPress={() => this.props.navigation.navigate('MainApp')}
+                onPress={() => this.onContinue()}
               />
             </View>
           </ScrollView>
