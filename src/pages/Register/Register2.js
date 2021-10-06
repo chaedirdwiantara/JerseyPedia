@@ -40,7 +40,7 @@ class Register2 extends Component {
   render() {
     const {dataKota, kota, provinsi} = this.state;
     const {getProvinsiResult, getKotaResult} = this.props;
-    console.log(getKotaResult, 'yo wassap');
+
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
