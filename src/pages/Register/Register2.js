@@ -12,14 +12,15 @@ import {colors, fonts, responsiveHeight, responsiveWidth} from '../../utils';
 import {IlustrasiRegister2} from '../../assets';
 import {Inputan, Jarak, Tombol, Pilihan} from '../../components';
 import {connect} from 'react-redux';
-import {getProvinsiList} from '../../actions/RajaOngkirAction';
+import {getProvinsiList, getKotaList} from '../../actions/RajaOngkirAction';
 
 class Register2 extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dataProvinsi: [],
+      kota: '',
+      provinsi: '',
       dataKota: [],
     };
   }
@@ -28,9 +29,18 @@ class Register2 extends Component {
     this.props.dispatch(getProvinsiList());
   }
 
+  ubahProvinsi = provinsi => {
+    this.setState({
+      provinsi: provinsi,
+    });
+
+    this.props.dispatch(getKotaList(provinsi));
+  };
+
   render() {
-    const {dataKota, dataProvinsi} = this.state;
-    const {getProvinsiResult} = this.props;
+    const {dataKota, kota, provinsi} = this.state;
+    const {getProvinsiResult, getKotaResult} = this.props;
+    console.log(getKotaResult, 'yo wassap');
     return (
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -62,8 +72,15 @@ class Register2 extends Component {
               <Pilihan
                 label="Provinsi"
                 datas={getProvinsiResult ? getProvinsiResult : []}
+                selectedValue={provinsi}
+                onValueChange={provinsi => this.ubahProvinsi(provinsi)}
               />
-              <Pilihan label="Kota/Kab" datas={dataKota} />
+              <Pilihan
+                label="Kota/Kab"
+                datas={getKotaResult ? getKotaResult : []}
+                selectedValue={kota}
+                onValueChange={kota => this.setState({kota: kota})}
+              />
               <Jarak height={25} />
               <Tombol
                 title="Continue"
@@ -83,6 +100,7 @@ class Register2 extends Component {
 
 const mapStateToProps = state => ({
   getProvinsiResult: state.RajaOngkirReducer.getProvinsiResult,
+  getKotaResult: state.RajaOngkirReducer.getKotaResult,
 });
 
 export default connect(mapStateToProps, null)(Register2);
