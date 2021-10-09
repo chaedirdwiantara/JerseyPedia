@@ -53,6 +53,7 @@ class Register2 extends Component {
       };
       //ke auth action
       console.log('Data: ', data);
+      // this.props.dispatch(registerUser(data, this.props.route.params.password))
     } else {
       Alert.alert('Error', 'Alama, Kota, dan Provinsi harus diisi');
     }
