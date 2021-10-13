@@ -26,7 +26,7 @@ export const registerUser = (data, password) => {
 
         //Simpan ke Realtime database firebase
         FIREBASE.database()
-          .ref('users/' + success.user.id)
+          .ref('users/' + success.user.uid)
           .set(dataBaru);
 
         //SUKSES

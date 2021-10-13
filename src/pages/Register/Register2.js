@@ -14,6 +14,7 @@ import {IlustrasiRegister2} from '../../assets';
 import {Inputan, Jarak, Tombol, Pilihan} from '../../components';
 import {connect} from 'react-redux';
 import {getProvinsiList, getKotaList} from '../../actions/RajaOngkirAction';
+import {registerUser} from '../../actions/AuthAction';
 
 class Register2 extends Component {
   constructor(props) {
@@ -28,6 +29,14 @@ class Register2 extends Component {
 
   componentDidMount() {
     this.props.dispatch(getProvinsiList());
+  }
+
+  componentDidUpdate(prevProps) {
+    const {registerResult} = this.props;
+
+    if (registerResult && prevProps.registerResult !== registerResult) {
+      this.props.navigation.replace('MainApp');
+    }
   }
 
   ubahProvinsi = provinsi => {
@@ -52,8 +61,7 @@ class Register2 extends Component {
         status: 'user',
       };
       //ke auth action
-      console.log('Data: ', data);
-      // this.props.dispatch(registerUser(data, this.props.route.params.password))
+      this.props.dispatch(registerUser(data, this.props.route.params.password));
     } else {
       Alert.alert('Error', 'Alama, Kota, dan Provinsi harus diisi');
     }
@@ -61,7 +69,7 @@ class Register2 extends Component {
 
   render() {
     const {kota, provinsi, alamat} = this.state;
-    const {getProvinsiResult, getKotaResult} = this.props;
+    const {getProvinsiResult, getKotaResult, registerLoading} = this.props;
 
     return (
       <KeyboardAvoidingView
@@ -116,6 +124,7 @@ class Register2 extends Component {
                 padding={10}
                 fontSize={18}
                 onPress={() => this.onContinue()}
+                loading={registerLoading}
               />
             </View>
           </ScrollView>
@@ -128,6 +137,10 @@ class Register2 extends Component {
 const mapStateToProps = state => ({
   getProvinsiResult: state.RajaOngkirReducer.getProvinsiResult,
   getKotaResult: state.RajaOngkirReducer.getKotaResult,
+
+  registerLoading: state.AuthReducer.registerLoading,
+  registerResult: state.AuthReducer.registerResult,
+  registerError: state.AuthReducer.registerError,
 });
 
 export default connect(mapStateToProps, null)(Register2);
