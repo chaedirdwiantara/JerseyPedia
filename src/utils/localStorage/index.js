@@ -19,3 +19,7 @@ export const getData = async key => {
     // error reading value
   }
 };
+
+export const clearStorage = async () => {
+  AsyncStorage.clear();
+};
