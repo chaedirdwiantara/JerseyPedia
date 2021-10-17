@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 import {Text, StyleSheet, View, ScrollView, Image, Alert} from 'react-native';
 import {connect} from 'react-redux';
 import {Inputan, Pilihan, Tombol} from '../../components';
-import {dummyProfile} from '../../data';
 import {
   colors,
   fonts,
@@ -13,6 +12,7 @@ import {
 import {getProvinsiList, getKotaList} from '../../actions/RajaOngkirAction';
 import {DefaultImage} from '../../assets';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {updateProfile} from '../../actions/ProfileAction';
 
 class EditProfile extends Component {
   constructor(props) {
@@ -45,6 +45,7 @@ class EditProfile extends Component {
         kota: data.kota,
         provinsi: data.provinsi,
         avatar: data.avatar,
+        avatarLama: data.avatar,
       });
 
       this.props.dispatch(getKotaList(data.provinsi));
@@ -56,6 +57,18 @@ class EditProfile extends Component {
     this.props.dispatch(getProvinsiList());
   }
 
+  componentDidUpdate(prevProps) {
+    const {updateProfileResult} = this.props;
+
+    if (
+      updateProfileResult &&
+      prevProps.updateProfileResult !== updateProfileResult
+    ) {
+      Alert.alert('Sukses', 'Update Profile Sukses');
+      this.props.navigation.replace('MainApp');
+    }
+  }
+
   ubahProvinsi = provinsi => {
     this.setState({
       provinsi: provinsi,
@@ -64,20 +77,21 @@ class EditProfile extends Component {
     this.props.dispatch(getKotaList(provinsi));
   };
 
-  getIamge = () => {
+  getImage = () => {
     launchImageLibrary(
-      {quality: 1, maxWidth: 500, maxHeight: 500},
+      {quality: 1, maxWidth: 500, maxHeight: 500, includeBase64: true},
       response => {
         if (response.didCancel || response.errorCode || response.errorMessage) {
           Alert.alert('Error', 'Maaf sepertinya anda tidak memilih fotonya');
         } else {
           console.log(response);
           const source = response.assets[0].uri;
-          const fileString = `data:${response.assets[0].type};base64,${response.assets[0].fileName}`;
+          const fileString = `data:${response.assets[0].type};base64,${response.assets[0].base64}`;
 
           this.setState({
             avatar: source,
             avatarForDB: fileString,
+            updateAvatar: true,
           });
         }
       },
@@ -88,7 +102,7 @@ class EditProfile extends Component {
     const {nama, nohp, alamat, provinsi, kota} = this.state;
     if (nama && nohp && alamat && provinsi && kota) {
       //dispatch update
-      // this.props.dispatch(updateProfile(this.state))
+      this.props.dispatch(updateProfile(this.state));
     } else {
       Alert.alert('Error', 'Nama No. HP, Alamat, Kota, Provinsi harus diisi');
     }
@@ -109,7 +123,7 @@ class EditProfile extends Component {
       avatar,
     } = this.state;
 
-    const {getKotaResult, getProvinsiResult} = this.props;
+    const {getKotaResult, getProvinsiResult, updateProfileLoading} = this.props;
 
     return (
       <View style={styles.pages}>
@@ -162,7 +176,7 @@ class EditProfile extends Component {
                   title="Change Photo"
                   type="text"
                   padding={7}
-                  onPress={() => this.getIamge()}
+                  onPress={() => this.getImage()}
                 />
               </View>
             </View>
@@ -170,11 +184,13 @@ class EditProfile extends Component {
 
           <View style={styles.submit}>
             <Tombol
+              loading={updateProfileLoading}
               title="Submit"
               type="textIcon"
               icon="submit"
               padding={responsiveHeight(15)}
               fontSize={18}
+              onPress={() => this.onSubmit()}
             />
           </View>
         </ScrollView>
@@ -186,6 +202,10 @@ class EditProfile extends Component {
 const mapStateToProps = state => ({
   getProvinsiResult: state.RajaOngkirReducer.getProvinsiResult,
   getKotaResult: state.RajaOngkirReducer.getKotaResult,
+
+  updateProfileLoading: state.ProfileReducer.updateProfileLoading,
+  updateProfileResult: state.ProfileReducer.updateProfileResult,
+  updateProfileError: state.ProfileReducer.updateProfileError,
 });
 
 export default connect(mapStateToProps, null)(EditProfile);
