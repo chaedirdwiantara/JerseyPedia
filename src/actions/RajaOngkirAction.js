@@ -4,6 +4,12 @@ import {
   API_RAJAONGKIR,
   API_TIMEOUT,
 } from '../utils/constant';
+import {
+  dispatchError,
+  dispatchLoading,
+  dispatchSuccess,
+  storeData,
+} from '../utils';
 
 export const GET_PROVINSI = 'GET_PROVINSI';
 export const GET_KOTA = 'GET_KOTA';
@@ -11,14 +17,7 @@ export const GET_KOTA = 'GET_KOTA';
 export const getProvinsiList = () => {
   return dispatch => {
     // LOADING
-    dispatch({
-      type: GET_PROVINSI,
-      payload: {
-        loading: true,
-        data: false,
-        errorMessage: false,
-      },
-    });
+    dispatchLoading(dispatch, GET_PROVINSI);
 
     axios({
       method: 'get',
@@ -29,36 +28,20 @@ export const getProvinsiList = () => {
       .then(response => {
         if (response.status !== 200) {
           // ERROR
-          dispatch({
-            type: GET_PROVINSI,
-            payload: {
-              loading: false,
-              data: false,
-              errorMessage: response,
-            },
-          });
+
+          dispatchError(dispatch, GET_PROVINSI, response);
         } else {
           // BERHASIL
-          dispatch({
-            type: GET_PROVINSI,
-            payload: {
-              loading: false,
-              data: response.data ? response.data.rajaongkir.results : [],
-              errorMessage: false,
-            },
-          });
+          dispatchSuccess(
+            dispatch,
+            GET_PROVINSI,
+            response.data ? response.data.rajaongkir.results : [],
+          );
         }
       })
       .catch(error => {
         // ERROR
-        dispatch({
-          type: GET_PROVINSI,
-          payload: {
-            loading: false,
-            data: false,
-            errorMessage: error,
-          },
-        });
+        dispatchError(dispatch, GET_PROVINSI, error);
 
         alert(error);
       });
@@ -68,14 +51,7 @@ export const getProvinsiList = () => {
 export const getKotaList = provinsi_id => {
   return dispatch => {
     // LOADING
-    dispatch({
-      type: GET_KOTA,
-      payload: {
-        loading: true,
-        data: false,
-        errorMessage: false,
-      },
-    });
+    dispatchLoading(dispatch, GET_KOTA);
 
     axios({
       method: 'get',
@@ -86,36 +62,19 @@ export const getKotaList = provinsi_id => {
       .then(response => {
         if (response.status !== 200) {
           // ERROR
-          dispatch({
-            type: GET_KOTA,
-            payload: {
-              loading: false,
-              data: false,
-              errorMessage: response,
-            },
-          });
+          dispatchError(dispatch, GET_KOTA, response);
         } else {
           // BERHASIL
-          dispatch({
-            type: GET_KOTA,
-            payload: {
-              loading: false,
-              data: response.data ? response.data.rajaongkir.results : [],
-              errorMessage: false,
-            },
-          });
+          dispatchSuccess(
+            dispatch,
+            GET_KOTA,
+            response.data ? response.data.rajaongkir.results : [],
+          );
         }
       })
       .catch(error => {
         // ERROR
-        dispatch({
-          type: GET_KOTA,
-          payload: {
-            loading: false,
-            data: false,
-            errorMessage: error,
-          },
-        });
+        dispatchError(dispatch, GET_KOTA, error);
 
         alert(error);
       });

@@ -1,5 +1,10 @@
 import FIREBASE from '../config/FIREBASE';
-import {storeData} from '../utils';
+import {
+  dispatchError,
+  dispatchLoading,
+  dispatchSuccess,
+  storeData,
+} from '../utils';
 
 export const REGISTER_USER = 'REGISTER_USER';
 export const LOGIN_USER = 'LOGIN_USER';
@@ -7,14 +12,7 @@ export const LOGIN_USER = 'LOGIN_USER';
 export const registerUser = (data, password) => {
   return dispatch => {
     // LOADING
-    dispatch({
-      type: REGISTER_USER,
-      payload: {
-        loading: true,
-        data: false,
-        errorMessage: false,
-      },
-    });
+    dispatchLoading(dispatch, REGISTER_USER);
 
     FIREBASE.auth()
       .createUserWithEmailAndPassword(data.email, password)
@@ -31,28 +29,15 @@ export const registerUser = (data, password) => {
           .set(dataBaru);
 
         //SUKSES
-        dispatch({
-          type: REGISTER_USER,
-          payload: {
-            loading: false,
-            data: dataBaru,
-            errorMessage: false,
-          },
-        });
+        dispatchSuccess(dispatch, REGISTER_USER, dataBaru);
+
         //Local Storage (Async Storage)
         storeData('user', dataBaru);
       })
 
       .catch(error => {
         // ERROR
-        dispatch({
-          type: REGISTER_USER,
-          payload: {
-            loading: false,
-            data: false,
-            errorMessage: error.message,
-          },
-        });
+        dispatchError(dispatch, REGISTER_USER, error.message);
 
         alert(error.message);
       });
@@ -63,14 +48,7 @@ export const loginUser = (email, password) => {
   console.log('Masuk Action');
   return dispatch => {
     // LOADING
-    dispatch({
-      type: LOGIN_USER,
-      payload: {
-        loading: true,
-        data: false,
-        errorMessage: false,
-      },
-    });
+    dispatchLoading(dispatch, LOGIN_USER);
 
     FIREBASE.auth()
       .signInWithEmailAndPassword(email, password)
@@ -83,14 +61,9 @@ export const loginUser = (email, password) => {
           .then(resDB => {
             console.log('Sukses Cek Login : ', resDB);
             if (resDB.val()) {
-              dispatch({
-                type: LOGIN_USER,
-                payload: {
-                  loading: false,
-                  data: resDB.val(),
-                  errorMessage: false,
-                },
-              });
+              //SUKSES
+              dispatchSuccess(dispatch, LOGIN_USER, resDB.val());
+
               //Local Storage (Async Storage)
               storeData('user', resDB.val());
             } else {
@@ -111,14 +84,7 @@ export const loginUser = (email, password) => {
       .catch(error => {
         console.log('Error: ', error);
         // ERROR
-        dispatch({
-          type: LOGIN_USER,
-          payload: {
-            loading: false,
-            data: false,
-            errorMessage: error.message,
-          },
-        });
+        dispatchError(dispatch, LOGIN_USER, error.message);
 
         alert(error.message);
       });
