@@ -8,21 +8,33 @@ import {
   Tombol,
 } from '../../components';
 import {colors, fonts} from '../../utils';
-import {dummyJerseys, dummyLigas} from '../../data';
+import {dummyJerseys} from '../../data';
 import {Jarak} from '../../components';
+import {connect} from 'react-redux';
+import {getListLiga} from '../../actions/LigaAction';
 
 class Home extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      ligas: dummyLigas,
       jerseys: dummyJerseys,
     };
   }
 
+  componentDidMount() {
+    //supaya akan selalu get data ketika tab profile dibuka, defaultnya tidak
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.props.dispatch(getListLiga());
+    });
+  }
+
+  componentWillUnmount() {
+    this._unsubscribe();
+  }
+
   render() {
-    const {ligas, jerseys} = this.state;
+    const {jerseys} = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.page}>
@@ -31,7 +43,7 @@ class Home extends Component {
           <BannerSlider />
           <View style={styles.pilihLiga}>
             <Text style={styles.label}>Pilih Liga </Text>
-            <ListLiga ligas={ligas} />
+            <ListLiga />
           </View>
 
           <View style={styles.pilihJersey}>
@@ -51,7 +63,7 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default connect()(Home);
 
 const styles = StyleSheet.create({
   page: {flex: 1, backgroundColor: colors.white},
