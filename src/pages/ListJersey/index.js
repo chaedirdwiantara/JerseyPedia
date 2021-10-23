@@ -2,21 +2,25 @@ import React, {Component} from 'react';
 import {StyleSheet, View, Text, ScrollView} from 'react-native';
 import {HeaderComponent, ListJerseys, ListLiga} from '../../components';
 import {colors, fonts} from '../../utils';
-import {dummyJerseys, dummyLigas} from '../../data';
 import {Jarak} from '../../components';
+import {connect} from 'react-redux';
+import {getListJersey} from '../../actions/JerseyAction';
+import {getListLiga} from '../../actions/LigaAction';
 
-export default class ListJersey extends Component {
-  constructor(props) {
-    super(props);
+class ListJersey extends Component {
+  componentDidMount() {
+    //supaya akan selalu get data ketika tab profile dibuka, defaultnya tidak
+    this._unsubscribe = this.props.navigation.addListener('focus', () => {
+      this.props.dispatch(getListLiga());
+      this.props.dispatch(getListJersey());
+    });
+  }
 
-    this.state = {
-      ligas: dummyLigas,
-      jerseys: dummyJerseys,
-    };
+  componentWillUnmount() {
+    this._unsubscribe();
   }
 
   render() {
-    const {ligas, jerseys} = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.page}>
@@ -25,7 +29,7 @@ export default class ListJersey extends Component {
           showsVerticalScrollIndicator={false}
           style={styles.container}>
           <View style={styles.pilihLiga}>
-            <ListLiga ligas={ligas} />
+            <ListLiga />
           </View>
 
           <View style={styles.pilihJersey}>
@@ -33,7 +37,7 @@ export default class ListJersey extends Component {
               Pilih <Text style={styles.boldLabel}>Jersey</Text> Yang Anda
               Inginkan
             </Text>
-            <ListJerseys jerseys={jerseys} />
+            <ListJerseys />
           </View>
 
           <Jarak height={100} />
@@ -42,6 +46,8 @@ export default class ListJersey extends Component {
     );
   }
 }
+
+export default connect()(ListJersey);
 
 const styles = StyleSheet.create({
   page: {flex: 1, backgroundColor: colors.white},

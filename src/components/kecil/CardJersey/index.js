@@ -7,7 +7,7 @@ const CardJersey = ({jersey, navigation}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.card}>
-        <Image source={jersey.gambar[0]} style={styles.gambar} />
+        <Image source={{uri: jersey.gambar[0]}} style={styles.gambar} />
         <Text style={styles.text}>{jersey.nama}</Text>
       </TouchableOpacity>
 

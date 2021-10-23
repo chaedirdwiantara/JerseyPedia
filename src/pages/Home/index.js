@@ -8,24 +8,17 @@ import {
   Tombol,
 } from '../../components';
 import {colors, fonts} from '../../utils';
-import {dummyJerseys} from '../../data';
 import {Jarak} from '../../components';
 import {connect} from 'react-redux';
 import {getListLiga} from '../../actions/LigaAction';
+import {limitJersey} from '../../actions/JerseyAction';
 
 class Home extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      jerseys: dummyJerseys,
-    };
-  }
-
   componentDidMount() {
     //supaya akan selalu get data ketika tab profile dibuka, defaultnya tidak
     this._unsubscribe = this.props.navigation.addListener('focus', () => {
       this.props.dispatch(getListLiga());
+      this.props.dispatch(limitJersey());
     });
   }
 
@@ -34,7 +27,6 @@ class Home extends Component {
   }
 
   render() {
-    const {jerseys} = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.page}>
@@ -51,7 +43,7 @@ class Home extends Component {
               Pilih <Text style={styles.boldLabel}>Jersey</Text> Yang Anda
               Inginkan
             </Text>
-            <ListJerseys jerseys={jerseys} navigation={navigation} />
+            <ListJerseys navigation={navigation} />
 
             <Tombol title="Lihat Semua" type="text" padding={7} />
           </View>

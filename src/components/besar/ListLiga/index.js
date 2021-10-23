@@ -4,7 +4,11 @@ import {connect} from 'react-redux';
 import {colors} from '../../../utils';
 import {CardLiga} from '../../kecil';
 
-const ListLiga = ({getListLigaResult, getListLigaLoading}) => {
+const ListLiga = ({
+  getListLigaResult,
+  getListLigaLoading,
+  getListLigaError,
+}) => {
   return (
     <View style={styles.container}>
       {getListLigaResult ? (
@@ -15,6 +19,8 @@ const ListLiga = ({getListLigaResult, getListLigaLoading}) => {
         <View style={styles.loading}>
           <ActivityIndicator color={colors.primary} />
         </View>
+      ) : getListLigaError ? (
+        <Text>{getListLigaError}</Text>
       ) : (
         <Text>Data Kosong</Text>
       )}
@@ -25,6 +31,7 @@ const ListLiga = ({getListLigaResult, getListLigaLoading}) => {
 const mapStateToProps = state => ({
   getListLigaLoading: state.LigaReducer.getListLigaLoading,
   getListLigaResult: state.LigaReducer.getListLigaResult,
+  getListLigaError: state.LigaReducer.getListLigaError,
 });
 
 export default connect(mapStateToProps, null)(ListLiga);
