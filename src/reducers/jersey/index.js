@@ -1,9 +1,16 @@
-import {GET_LIST_JERSEY} from '../../actions/JerseyAction';
+import {
+  GET_LIST_JERSEY,
+  GET_LIST_JERSEY_BY_LIGA,
+  DELETE_PARAMETER_JERSEY,
+} from '../../actions/JerseyAction';
 
 const initialState = {
   getListJerseyLoading: false,
   getListJerseyResult: false,
   getListJerseyError: false,
+
+  idLiga: false,
+  namaLiga: false,
 };
 
 export default function (state = initialState, action) {
@@ -15,6 +22,21 @@ export default function (state = initialState, action) {
         getListJerseyResult: action.payload.data,
         getListJerseyError: action.payload.errorMessage,
       };
+
+    case GET_LIST_JERSEY_BY_LIGA:
+      return {
+        ...state,
+        idLiga: action.payload.idLiga,
+        namaLiga: action.payload.namaLiga,
+      };
+
+    case DELETE_PARAMETER_JERSEY:
+      return {
+        ...state,
+        idLiga: false,
+        namaLiga: false,
+      };
+
     default:
       return state;
   }

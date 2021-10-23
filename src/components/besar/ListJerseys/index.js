@@ -10,7 +10,6 @@ const ListJerseys = ({
   getListJerseyError,
   navigation,
 }) => {
-  console.log(getListJerseyResult, 'getListJerseyResult');
   return (
     <View style={styles.container}>
       {getListJerseyResult ? (

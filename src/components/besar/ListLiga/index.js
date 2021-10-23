@@ -8,12 +8,20 @@ const ListLiga = ({
   getListLigaResult,
   getListLigaLoading,
   getListLigaError,
+  navigation,
 }) => {
   return (
     <View style={styles.container}>
       {getListLigaResult ? (
         Object.keys(getListLigaResult).map(key => {
-          return <CardLiga liga={getListLigaResult[key]} key={key} />;
+          return (
+            <CardLiga
+              navigation={navigation}
+              liga={getListLigaResult[key]}
+              key={key}
+              id={key}
+            />
+          );
         })
       ) : getListLigaLoading ? (
         <View style={styles.loading}>

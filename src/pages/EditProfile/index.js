@@ -84,7 +84,6 @@ class EditProfile extends Component {
         if (response.didCancel || response.errorCode || response.errorMessage) {
           Alert.alert('Error', 'Maaf sepertinya anda tidak memilih fotonya');
         } else {
-          console.log(response);
           const source = response.assets[0].uri;
           const fileString = `data:${response.assets[0].type};base64,${response.assets[0].base64}`;
 

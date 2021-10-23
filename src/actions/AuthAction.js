@@ -45,7 +45,7 @@ export const registerUser = (data, password) => {
 };
 
 export const loginUser = (email, password) => {
-  console.log('Masuk Action');
+  // console.log('Masuk Action');
   return dispatch => {
     // LOADING
     dispatchLoading(dispatch, LOGIN_USER);
@@ -53,13 +53,13 @@ export const loginUser = (email, password) => {
     FIREBASE.auth()
       .signInWithEmailAndPassword(email, password)
       .then(success => {
-        console.log('Sukses Login : ', success);
+        // console.log('Sukses Login : ', success);
         // Signed in
         FIREBASE.database()
           .ref('/users/' + success.user.uid)
           .once('value')
           .then(resDB => {
-            console.log('Sukses Cek Login : ', resDB);
+            // console.log('Sukses Cek Login : ', resDB);
             if (resDB.val()) {
               //SUKSES
               dispatchSuccess(dispatch, LOGIN_USER, resDB.val());
@@ -82,7 +82,7 @@ export const loginUser = (email, password) => {
           });
       })
       .catch(error => {
-        console.log('Error: ', error);
+        // console.log('Error: ', error);
         // ERROR
         dispatchError(dispatch, LOGIN_USER, error.message);
 

@@ -35,7 +35,7 @@ class Home extends Component {
           <BannerSlider />
           <View style={styles.pilihLiga}>
             <Text style={styles.label}>Pilih Liga </Text>
-            <ListLiga />
+            <ListLiga navigation={navigation} />
           </View>
 
           <View style={styles.pilihJersey}>
