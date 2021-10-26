@@ -3,9 +3,38 @@ import {StyleSheet, View, TextInput} from 'react-native';
 import {colors, fonts, responsiveHeight} from '../../../utils';
 import {IconCari} from '../../../assets';
 import {Jarak, Tombol} from '../../kecil';
+import {connect} from 'react-redux';
+import {saveKeywordJersey} from '../../../actions/JerseyAction';
 
-export default class HeaderComponent extends Component {
+class HeaderComponent extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      search: '',
+    };
+  }
+
+  selesaiCari = () => {
+    const {page, navigation, dispatch} = this.props;
+    const {search} = this.state;
+
+    //jalankan action save keyword
+    dispatch(saveKeywordJersey(search));
+
+    //jika itu halaman home kita navigate ke listJersey
+    if (page !== 'ListJersey') {
+      navigation.navigate('ListJersey');
+    }
+
+    //kembalikan state search itu ke string kosong
+    this.setState({
+      search: '',
+    });
+  };
+
   render() {
+    const {search} = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.container}>
@@ -13,7 +42,13 @@ export default class HeaderComponent extends Component {
           {/* Input Pencarian */}
           <View style={styles.searchSection}>
             <IconCari />
-            <TextInput placeholder="Cari Jersey. . ." style={styles.input} />
+            <TextInput
+              placeholder="Cari Jersey. . ."
+              style={styles.input}
+              value={search}
+              onChangeText={search => this.setState({search})}
+              onSubmitEditing={() => this.selesaiCari()}
+            />
           </View>
           <Jarak width={10} />
           <Tombol
@@ -26,6 +61,8 @@ export default class HeaderComponent extends Component {
     );
   }
 }
+
+export default connect()(HeaderComponent);
 
 const styles = StyleSheet.create({
   container: {

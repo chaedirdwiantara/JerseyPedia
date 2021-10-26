@@ -2,6 +2,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import React, {Component} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {RFValue} from 'react-native-responsive-fontsize';
+import {connect} from 'react-redux';
 import {
   CardLiga,
   Inputan,
@@ -18,8 +19,9 @@ import {
   heightMobileUI,
   responsiveWidth,
 } from '../../utils';
+import {getDetailLiga} from '../../actions/LigaAction';
 
-export default class JerseyDetail extends Component {
+class JerseyDetail extends Component {
   constructor(props) {
     super(props);
 
@@ -29,8 +31,13 @@ export default class JerseyDetail extends Component {
     };
   }
 
+  componentDidMount() {
+    const {jersey} = this.state;
+    this.props.dispatch(getDetailLiga(jersey.liga));
+  }
+
   render() {
-    const {navigation} = this.props;
+    const {navigation, getDetailLigaResult} = this.props;
     const {jersey, images} = this.state;
     return (
       <View style={styles.page}>
@@ -44,7 +51,11 @@ export default class JerseyDetail extends Component {
         <JerseySlider images={images} />
         <View style={styles.container}>
           <View style={styles.liga}>
-            <CardLiga liga={jersey.liga} />
+            <CardLiga
+              liga={getDetailLigaResult}
+              navigation={navigation}
+              id={jersey.liga}
+            />
           </View>
           <View style={styles.desc}>
             <Text style={styles.nama}>{jersey.nama}</Text>
@@ -91,6 +102,12 @@ export default class JerseyDetail extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  getDetailLigaResult: state.LigaReducer.getDetailLigaResult,
+});
+
+export default connect(mapStateToProps, null)(JerseyDetail);
 
 const styles = StyleSheet.create({
   page: {

@@ -2,6 +2,7 @@ import {
   GET_LIST_JERSEY,
   GET_LIST_JERSEY_BY_LIGA,
   DELETE_PARAMETER_JERSEY,
+  SAVE_KEYWORD_JERSEY,
 } from '../../actions/JerseyAction';
 
 const initialState = {
@@ -11,6 +12,7 @@ const initialState = {
 
   idLiga: false,
   namaLiga: false,
+  keyword: false,
 };
 
 export default function (state = initialState, action) {
@@ -35,6 +37,13 @@ export default function (state = initialState, action) {
         ...state,
         idLiga: false,
         namaLiga: false,
+        keyword: false,
+      };
+
+    case SAVE_KEYWORD_JERSEY:
+      return {
+        ...state,
+        keyword: action.payload.data,
       };
 
     default:
