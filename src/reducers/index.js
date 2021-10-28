@@ -5,6 +5,7 @@ import AuthReducer from './auth';
 import ProfileReducer from './profile';
 import LigaReducer from './liga';
 import JerseyReducer from './jersey';
+import KeranjangReducer from './keranjang';
 
 const rootReducer = combineReducers({
   UserReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   ProfileReducer,
   LigaReducer,
   JerseyReducer,
+  KeranjangReducer,
 });
 
 export default rootReducer;
