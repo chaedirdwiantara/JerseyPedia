@@ -12,6 +12,9 @@ const Pilihan = ({
   selectedValue,
   onValueChange,
 }) => {
+  console.log(datas, 'datas');
+
+  console.log(label, 'label coy');
   return (
     <View style={styles.container}>
       <Text style={styles.label(fontSize)}>{label} :</Text>
@@ -22,6 +25,8 @@ const Pilihan = ({
           onValueChange={onValueChange}>
           <Picker.Item label="--Pilih--" value="" />
           {datas.map((item, index) => {
+            console.log(item, 'item');
+
             if (label == 'Provinsi') {
               return (
                 <Picker.Item
@@ -30,7 +35,7 @@ const Pilihan = ({
                   key={item.province_id}
                 />
               );
-            } else if ((label = 'Kota/Kab')) {
+            } else if (label == 'Kota/Kab') {
               return (
                 <Picker.Item
                   label={item.type + ' ' + item.city_name}
@@ -58,7 +63,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     borderColor: colors.border,
-    justifyContent: 'center',
+    // justifyContent: 'center',
   },
   label: fontSize => ({
     fontSize: fontSize ? fontSize : 18,
@@ -69,5 +74,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary.regular,
     width: width,
     height: height ? height : responsiveHeight(46),
+    marginTop: -10,
+    marginBottom: 10,
   }),
 });
