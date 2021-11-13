@@ -12,9 +12,6 @@ const Pilihan = ({
   selectedValue,
   onValueChange,
 }) => {
-  console.log(datas, 'datas');
-
-  console.log(label, 'label coy');
   return (
     <View style={styles.container}>
       <Text style={styles.label(fontSize)}>{label} :</Text>
@@ -25,8 +22,6 @@ const Pilihan = ({
           onValueChange={onValueChange}>
           <Picker.Item label="--Pilih--" value="" />
           {datas.map((item, index) => {
-            console.log(item, 'item');
-
             if (label == 'Provinsi') {
               return (
                 <Picker.Item

@@ -11,6 +11,11 @@ export const masukKeranjang = data => {
     FIREBASE.database()
       .ref('keranjangs/' + data.uid)
       .once('value', querySnapshot => {
+        console.log(
+          'cek keranjang di firebase apakah ada',
+          querySnapshot.val(),
+        );
+
         if (querySnapshot.val()) {
           //Update Keranjang Utama
           const keranjangUtama = querySnapshot.val();
@@ -47,6 +52,7 @@ export const masukKeranjang = data => {
             .child(data.uid)
             .set(keranjangUtama)
             .then(response => {
+              console.log('response disimpan ke keranjang utama', response);
               //Simpan Ke Keranjang Detail
               dispatch(masukKeranjangDetail(data));
             })
@@ -79,6 +85,7 @@ export const masukKeranjangDetail = data => {
       .child('pesanans')
       .push(pesanans)
       .then(response => {
+        console.log('Simpan Keranjang Detail', response);
         dispatchSuccess(dispatch, MASUK_KERANJANG, response ? response : []);
       })
       .catch(error => {

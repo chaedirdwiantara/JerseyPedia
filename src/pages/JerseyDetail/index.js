@@ -21,6 +21,7 @@ import {
   getData,
 } from '../../utils';
 import {getDetailLiga} from '../../actions/LigaAction';
+import {masukKeranjang} from '../../actions/KeranjangAction';
 
 class JerseyDetail extends Component {
   constructor(props) {
@@ -41,6 +42,17 @@ class JerseyDetail extends Component {
     this.props.dispatch(getDetailLiga(jersey.liga));
   }
 
+  componentDidUpdate(prevProps) {
+    const {saveKeranjangResult} = this.props;
+
+    if (
+      saveKeranjangResult &&
+      prevProps.saveKeranjangResult !== saveKeranjangResult
+    ) {
+      this.props.navigation.navigate('Keranjang');
+    }
+  }
+
   masukKeranjang = () => {
     const {jumlah, keterangan, ukuran} = this.state;
 
@@ -54,7 +66,7 @@ class JerseyDetail extends Component {
         //validasi form
         if (jumlah && keterangan && ukuran) {
           //hubungkan ke action (keranjangAction/masukKeranjang)
-          //this.props.dispatch(masukKeranjang(this.state))
+          this.props.dispatch(masukKeranjang(this.state));
         } else {
           Alert.alert('Error', 'Jumlah, Ukuran, & Keterangan Harus diisi');
         }
@@ -66,12 +78,9 @@ class JerseyDetail extends Component {
   };
 
   render() {
-    const {navigation, getDetailLigaResult} = this.props;
-    console.log(this.props, 'ini');
+    const {navigation, getDetailLigaResult, saveKeranjangLoading} = this.props;
 
     const {jersey, images, jumlah, keterangan, ukuran} = this.state;
-    console.log(this.state, 'state');
-    console.log(jersey.ukuran, 'jersey');
     return (
       <View style={styles.page}>
         <View style={styles.button}>
@@ -135,6 +144,7 @@ class JerseyDetail extends Component {
               padding={responsiveHeight(17)}
               fontSize={18}
               onPress={() => this.masukKeranjang()}
+              loading={saveKeranjangLoading}
             />
           </View>
         </View>
@@ -145,6 +155,10 @@ class JerseyDetail extends Component {
 
 const mapStateToProps = state => ({
   getDetailLigaResult: state.LigaReducer.getDetailLigaResult,
+
+  saveKeranjangLoading: state.KeranjangReducer.saveKeranjangLoading,
+  saveKeranjangResult: state.KeranjangReducer.saveKeranjangResult,
+  saveKeranjangError: state.KeranjangReducer.saveKeranjangError,
 });
 
 export default connect(mapStateToProps, null)(JerseyDetail);
