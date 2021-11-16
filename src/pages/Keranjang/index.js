@@ -13,14 +13,6 @@ import {connect} from 'react-redux';
 import {getListKeranjang} from '../../actions/KeranjangAction';
 
 class Keranjang extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      pesanan: dummyPesanans[0],
-    };
-  }
-
   componentDidMount() {
     getData('user').then(res => {
       if (res) {
@@ -34,29 +26,43 @@ class Keranjang extends Component {
   }
 
   render() {
-    const {pesanan} = this.state;
+    const {getListKeranjangResult} = this.props;
     // console.log('Data Keranjang : ', this.props.getListKeranjangResult);
     return (
       <View style={styles.page}>
-        <ListKeranjang keranjangs={pesanan.pesanans} />
+        <ListKeranjang {...this.props} />
         <View style={styles.footer}>
           {/* Total Harga */}
           <View style={styles.totalHarga}>
             <Text style={styles.textBold}>Total Harga :</Text>
             <Text style={styles.textBold}>
-              Rp. {numberWithCommas(pesanan.totalHarga)}
+              Rp.{' '}
+              {getListKeranjangResult
+                ? numberWithCommas(getListKeranjangResult.totalHarga)
+                : 0}
             </Text>
           </View>
 
           {/* Tombol */}
-          <Tombol
-            title="Check Out"
-            type="textIcon"
-            fontSize={18}
-            padding={responsiveHeight(15)}
-            icon="keranjang-putih"
-            onPress={() => this.props.navigation.navigate('Checkout')}
-          />
+          {getListKeranjangResult ? (
+            <Tombol
+              title="Check Out"
+              type="textIcon"
+              fontSize={18}
+              padding={responsiveHeight(15)}
+              icon="keranjang-putih"
+              onPress={() => this.props.navigation.navigate('Checkout')}
+            />
+          ) : (
+            <Tombol
+              title="Check Out"
+              type="textIcon"
+              fontSize={18}
+              padding={responsiveHeight(15)}
+              icon="keranjang-putih"
+              disabled={true}
+            />
+          )}
         </View>
       </View>
     );

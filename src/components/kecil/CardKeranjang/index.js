@@ -10,10 +10,13 @@ import {
 import {IconHapus} from '../../../assets';
 import {Jarak} from '..';
 
-const CardKeranjang = ({keranjang}) => {
+const CardKeranjang = ({keranjang, keranjangUtama, id}) => {
   return (
     <View style={styles.container}>
-      <Image source={keranjang.product.gambar[0]} style={styles.gambar} />
+      <Image
+        source={{uri: keranjang.product.gambar[0]}}
+        style={styles.gambar}
+      />
       <View style={styles.desc}>
         <Text style={styles.nama}>{keranjang.product.nama}</Text>
         <Text style={styles.text}>
