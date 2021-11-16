@@ -2,9 +2,17 @@ import React, {Component} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import {dummyPesanans} from '../../data';
 import {ListKeranjang, Tombol} from '../../components';
-import {colors, fonts, numberWithCommas, responsiveHeight} from '../../utils';
+import {
+  colors,
+  fonts,
+  getData,
+  numberWithCommas,
+  responsiveHeight,
+} from '../../utils';
+import {connect} from 'react-redux';
+import {getListKeranjang} from '../../actions/KeranjangAction';
 
-export default class Keranjang extends Component {
+class Keranjang extends Component {
   constructor(props) {
     super(props);
 
@@ -13,8 +21,21 @@ export default class Keranjang extends Component {
     };
   }
 
+  componentDidMount() {
+    getData('user').then(res => {
+      if (res) {
+        //udah login
+        this.props.dispatch(getListKeranjang(res.uid));
+      } else {
+        //belum login
+        this.props.navigation.replace('Login');
+      }
+    });
+  }
+
   render() {
     const {pesanan} = this.state;
+    // console.log('Data Keranjang : ', this.props.getListKeranjangResult);
     return (
       <View style={styles.page}>
         <ListKeranjang keranjangs={pesanan.pesanans} />
@@ -41,6 +62,14 @@ export default class Keranjang extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  getListKeranjangLoading: state.KeranjangReducer.getListKeranjangLoading,
+  getListKeranjangResult: state.KeranjangReducer.getListKeranjangResult,
+  getListKeranjangError: state.KeranjangReducer.getListKeranjangError,
+});
+
+export default connect(mapStateToProps, null)(Keranjang);
 
 const styles = StyleSheet.create({
   page: {

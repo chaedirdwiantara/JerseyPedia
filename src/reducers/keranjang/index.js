@@ -1,9 +1,16 @@
-import {MASUK_KERANJANG} from '../../actions/KeranjangAction';
+import {
+  MASUK_KERANJANG,
+  GET_LIST_KERANJANG,
+} from '../../actions/KeranjangAction';
 
 const initialState = {
   saveKeranjangLoading: false,
   saveKeranjangResult: false,
   saveKeranjangError: false,
+
+  getListKeranjangLoading: false,
+  getListKeranjangResult: false,
+  getListKeranjangError: false,
 };
 
 export default function (state = initialState, action) {
@@ -14,6 +21,14 @@ export default function (state = initialState, action) {
         saveKeranjangLoading: action.payload.loading,
         saveKeranjangResult: action.payload.data,
         saveKeranjangError: action.payload.errorMessage,
+      };
+
+    case GET_LIST_KERANJANG:
+      return {
+        ...state,
+        getListKeranjangLoading: action.payload.loading,
+        getListKeranjangResult: action.payload.data,
+        getListKeranjangError: action.payload.errorMessage,
       };
 
     default:

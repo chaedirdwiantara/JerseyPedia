@@ -2,6 +2,7 @@ import FIREBASE from '../config/FIREBASE';
 import {dispatchError, dispatchLoading, dispatchSuccess} from '../utils';
 
 export const MASUK_KERANJANG = 'MASUK_KERANJANG';
+export const GET_LIST_KERANJANG = 'GET_LIST_KERANJANG';
 
 export const masukKeranjang = data => {
   return dispatch => {
@@ -11,10 +12,10 @@ export const masukKeranjang = data => {
     FIREBASE.database()
       .ref('keranjangs/' + data.uid)
       .once('value', querySnapshot => {
-        console.log(
-          'cek keranjang di firebase apakah ada',
-          querySnapshot.val(),
-        );
+        // console.log(
+        //   'cek keranjang di firebase apakah ada',
+        //   querySnapshot.val(),
+        // );
 
         if (querySnapshot.val()) {
           //Update Keranjang Utama
@@ -52,7 +53,7 @@ export const masukKeranjang = data => {
             .child(data.uid)
             .set(keranjangUtama)
             .then(response => {
-              console.log('response disimpan ke keranjang utama', response);
+              // console.log('response disimpan ke keranjang utama', response);
               //Simpan Ke Keranjang Detail
               dispatch(masukKeranjangDetail(data));
             })
@@ -85,11 +86,33 @@ export const masukKeranjangDetail = data => {
       .child('pesanans')
       .push(pesanans)
       .then(response => {
-        console.log('Simpan Keranjang Detail', response);
+        // console.log('Simpan Keranjang Detail', response);
         dispatchSuccess(dispatch, MASUK_KERANJANG, response ? response : []);
       })
       .catch(error => {
         dispatchError(dispatch, MASUK_KERANJANG, error);
+        alert(error);
+      });
+  };
+};
+
+export const getListKeranjang = id => {
+  return dispatch => {
+    dispatchLoading(dispatch, GET_LIST_KERANJANG);
+
+    FIREBASE.database()
+      .ref('keranjangs/' + id)
+      .once('value', querySnapshot => {
+        //Hasil
+        // let data = querySnapshot.val() ? querySnapshot.val() : [];
+        // let dataItem = {...data};
+        let data = querySnapshot.val();
+
+        // dispatchSuccess(dispatch, GET_LIST_KERANJANG, dataItem);
+        dispatchSuccess(dispatch, GET_LIST_KERANJANG, data);
+      })
+      .catch(error => {
+        dispatchError(dispatch, GET_LIST_KERANJANG, error);
         alert(error);
       });
   };
