@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {
   colors,
   fonts,
@@ -9,8 +9,14 @@ import {
 } from '../../../utils';
 import {IconHapus} from '../../../assets';
 import {Jarak} from '..';
+import {connect} from 'react-redux';
+import {deleteKeranjang} from '../../../actions/KeranjangAction';
 
-const CardKeranjang = ({keranjang, keranjangUtama, id}) => {
+const CardKeranjang = ({keranjang, keranjangUtama, id, dispatch}) => {
+  const hapusKeranjang = () => {
+    dispatch(deleteKeranjang(id, keranjangUtama, keranjang));
+  };
+
   return (
     <View style={styles.container}>
       <Image
@@ -38,14 +44,14 @@ const CardKeranjang = ({keranjang, keranjangUtama, id}) => {
         <Text style={styles.textBold}>Keterangan :</Text>
         <Text style={styles.textBold}>{keranjang.keterangan}</Text>
       </View>
-      <View style={styles.hapus}>
+      <TouchableOpacity style={styles.hapus} onPress={() => hapusKeranjang()}>
         <IconHapus />
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default CardKeranjang;
+export default connect()(CardKeranjang);
 
 const styles = StyleSheet.create({
   container: {

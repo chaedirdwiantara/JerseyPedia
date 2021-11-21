@@ -1,6 +1,5 @@
 export const dispatchLoading = (dispatch, type) => {
   return dispatch({
-    // LOADING
     type: type,
     payload: {
       loading: true,
@@ -12,7 +11,6 @@ export const dispatchLoading = (dispatch, type) => {
 
 export const dispatchSuccess = (dispatch, type, result) => {
   return dispatch({
-    // SUCCESS
     type: type,
     payload: {
       loading: false,
@@ -24,7 +22,6 @@ export const dispatchSuccess = (dispatch, type, result) => {
 
 export const dispatchError = (dispatch, type, error) => {
   return dispatch({
-    // SUCCESS
     type: type,
     payload: {
       loading: false,

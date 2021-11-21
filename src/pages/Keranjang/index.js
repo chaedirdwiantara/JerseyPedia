@@ -25,6 +25,25 @@ class Keranjang extends Component {
     });
   }
 
+  componentDidUpdate(prevProps) {
+    const {deleteKeranjangResult} = this.props;
+
+    if (
+      deleteKeranjangResult &&
+      prevProps.deleteKeranjangResult !== deleteKeranjangResult
+    ) {
+      getData('user').then(res => {
+        if (res) {
+          //udah login
+          this.props.dispatch(getListKeranjang(res.uid));
+        } else {
+          //belum login
+          this.props.navigation.replace('Login');
+        }
+      });
+    }
+  }
+
   render() {
     const {getListKeranjangResult} = this.props;
     // console.log('Data Keranjang : ', this.props.getListKeranjangResult);
@@ -73,6 +92,10 @@ const mapStateToProps = state => ({
   getListKeranjangLoading: state.KeranjangReducer.getListKeranjangLoading,
   getListKeranjangResult: state.KeranjangReducer.getListKeranjangResult,
   getListKeranjangError: state.KeranjangReducer.getListKeranjangError,
+
+  deleteKeranjangLoading: state.KeranjangReducer.deleteKeranjangLoading,
+  deleteKeranjangResult: state.KeranjangReducer.deleteKeranjangResult,
+  deleteKeranjangError: state.KeranjangReducer.deleteKeranjangError,
 });
 
 export default connect(mapStateToProps, null)(Keranjang);
