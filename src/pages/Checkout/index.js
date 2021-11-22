@@ -1,31 +1,82 @@
 import React, {Component} from 'react';
 import {Text, StyleSheet, View} from 'react-native';
+import {connect} from 'react-redux';
 import {CardAlamat, Jarak, Pilihan, Tombol} from '../../components';
-import {colors, fonts, numberWithCommas, responsiveHeight} from '../../utils';
-import {dummyProfile, dummyPesanans} from '../../data';
+import {
+  colors,
+  fonts,
+  getData,
+  numberWithCommas,
+  responsiveHeight,
+} from '../../utils';
+import {getKotaDetail} from '../../actions/RajaOngkirAction';
 
-export default class Checkout extends Component {
+class Checkout extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      profile: dummyProfile,
-      pesanan: dummyPesanans[0],
+      profile: false,
       ekspedisi: [],
+      totalHarga: this.props.route.params.totalHarga,
+      totalBerat: this.props.route.params.totalBerat,
+      kota: '',
+      provinsi: '',
+      alamat: '',
     };
   }
 
+  componentDidMount() {
+    this.getUserData();
+  }
+
+  getUserData = () => {
+    getData('user').then(res => {
+      const data = res;
+      if (data) {
+        this.setState({
+          profile: data,
+          alamat: data.alamat,
+        });
+        this.props.dispatch(getKotaDetail(data.kota));
+      } else {
+        this.props.navigation.replace('Login');
+      }
+    });
+  };
+
+  componentDidUpdate(prevProps) {
+    const {getKotaDetailResult} = this.props;
+
+    if (
+      getKotaDetailResult &&
+      prevProps.getKotaDetailResult !== getKotaDetailResult
+    ) {
+      this.setState({
+        provinsi: getKotaDetailResult.province,
+        kota: getKotaDetailResult.type + ' ' + getKotaDetailResult.city_name,
+      });
+    }
+  }
+
   render() {
-    const {profile, pesanan, ekspedisi} = this.state;
+    const {ekspedisi, totalBerat, totalHarga, alamat, kota, provinsi} =
+      this.state;
+    const {navigation} = this.props;
     return (
       <View style={styles.pages}>
         <View style={styles.isi}>
           <Text style={styles.textBold}> Apakah Benar Alamat ini ? </Text>
-          <CardAlamat profile={profile} />
+          <CardAlamat
+            alamat={alamat}
+            provinsi={provinsi}
+            kota={kota}
+            navigation={navigation}
+          />
           <View style={styles.totalHarga}>
             <Text style={styles.textBold}>Total Harga :</Text>
             <Text style={styles.textBold}>
-              Rp. {numberWithCommas(pesanan.totalHarga)}
+              Rp. {numberWithCommas(totalHarga)}
             </Text>
           </View>
           <Pilihan label="Pilih Ekspedisi" datas={ekspedisi} />
@@ -34,7 +85,7 @@ export default class Checkout extends Component {
 
           <View style={styles.ongkir}>
             <Text style={styles.text}>
-              Untuk Berat : {numberWithCommas(pesanan.berat)} kg
+              Untuk Berat : {numberWithCommas(totalBerat)} kg
             </Text>
             <Text style={styles.textBold}>Rp. {numberWithCommas(15000)}</Text>
           </View>
@@ -50,7 +101,7 @@ export default class Checkout extends Component {
           <View style={styles.totalHarga}>
             <Text style={styles.textBold}>Total Harga :</Text>
             <Text style={styles.textBold}>
-              Rp. {numberWithCommas(pesanan.totalHarga + 15000)}
+              Rp. {numberWithCommas(totalHarga + 15000)}
             </Text>
           </View>
 
@@ -68,6 +119,14 @@ export default class Checkout extends Component {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  getKotaDetailLoading: state.RajaOngkirReducer.getKotaDetailLoading,
+  getKotaDetailResult: state.RajaOngkirReducer.getKotaDetailResult,
+  getKotaDetailError: state.RajaOngkirReducer.getKotaDetailError,
+});
+
+export default connect(mapStateToProps, null)(Checkout);
 
 const styles = StyleSheet.create({
   pages: {

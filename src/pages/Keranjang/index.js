@@ -70,7 +70,12 @@ class Keranjang extends Component {
               fontSize={18}
               padding={responsiveHeight(15)}
               icon="keranjang-putih"
-              onPress={() => this.props.navigation.navigate('Checkout')}
+              onPress={() =>
+                this.props.navigation.navigate('Checkout', {
+                  totalHarga: getListKeranjangResult.totalHarga,
+                  totalBerat: getListKeranjangResult.totalBerat,
+                })
+              }
             />
           ) : (
             <Tombol
