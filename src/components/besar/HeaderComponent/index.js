@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
-import {colors, fonts, responsiveHeight} from '../../../utils';
+import {colors, fonts, getData, responsiveHeight} from '../../../utils';
 import {IconCari} from '../../../assets';
 import {Jarak, Tombol} from '../../kecil';
 import {connect} from 'react-redux';
 import {saveKeywordJersey} from '../../../actions/JerseyAction';
+import {getListKeranjang} from '../../../actions/KeranjangAction';
 
 class HeaderComponent extends Component {
   constructor(props) {
@@ -13,6 +14,15 @@ class HeaderComponent extends Component {
     this.state = {
       search: '',
     };
+  }
+
+  componentDidMount() {
+    getData('user').then(res => {
+      if (res) {
+        //udah login
+        this.props.dispatch(getListKeranjang(res.uid));
+      }
+    });
   }
 
   selesaiCari = () => {
@@ -35,7 +45,14 @@ class HeaderComponent extends Component {
 
   render() {
     const {search} = this.state;
-    const {navigation} = this.props;
+    const {navigation, getListKeranjangResult} = this.props;
+
+    let totalKeranjang;
+
+    if (getListKeranjangResult) {
+      totalKeranjang = Object.keys(getListKeranjangResult.pesanans).length; //Object keys to count how many object in the component that we called
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.wrapperHeader}>
@@ -55,6 +72,7 @@ class HeaderComponent extends Component {
             icon="keranjang"
             padding={10}
             onPress={() => navigation.navigate('Keranjang')}
+            totalKeranjang={totalKeranjang}
           />
         </View>
       </View>
@@ -62,7 +80,10 @@ class HeaderComponent extends Component {
   }
 }
 
-export default connect()(HeaderComponent);
+const mapStateToProps = state => ({
+  getListKeranjangResult: state.KeranjangReducer.getListKeranjangResult,
+});
+export default connect(mapStateToProps, null)(HeaderComponent);
 
 const styles = StyleSheet.create({
   container: {
