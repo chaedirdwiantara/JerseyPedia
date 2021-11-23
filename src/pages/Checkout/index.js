@@ -10,6 +10,7 @@ import {
   responsiveHeight,
 } from '../../utils';
 import {getKotaDetail} from '../../actions/RajaOngkirAction';
+import {couriers} from '../../data/couriers';
 
 class Checkout extends Component {
   constructor(props) {
@@ -17,7 +18,10 @@ class Checkout extends Component {
 
     this.state = {
       profile: false,
-      ekspedisi: [],
+      ekspedisi: couriers,
+      ekspedisiSelected: false,
+      ongkir: 0,
+      estimasi: '',
       totalHarga: this.props.route.params.totalHarga,
       totalBerat: this.props.route.params.totalBerat,
       kota: '',
@@ -59,9 +63,28 @@ class Checkout extends Component {
     }
   }
 
+  ubahEkspedisi = ekspedisiSelected => {
+    if (ekspedisiSelected) {
+      this.setState({
+        ekspedisiSelected: ekspedisiSelected,
+      });
+
+      // this.props.dispatch(posOngkir(this.state,ekspedisiSelected))
+    }
+  };
+
   render() {
-    const {ekspedisi, totalBerat, totalHarga, alamat, kota, provinsi} =
-      this.state;
+    const {
+      ekspedisi,
+      totalBerat,
+      totalHarga,
+      alamat,
+      kota,
+      provinsi,
+      ekspedisiSelected,
+      ongkir,
+      estimasi,
+    } = this.state;
     const {navigation} = this.props;
     return (
       <View style={styles.pages}>
@@ -79,7 +102,14 @@ class Checkout extends Component {
               Rp. {numberWithCommas(totalHarga)}
             </Text>
           </View>
-          <Pilihan label="Pilih Ekspedisi" datas={ekspedisi} />
+          <Pilihan
+            label="Pilih Ekspedisi"
+            datas={ekspedisi}
+            selectedValue={ekspedisiSelected}
+            onValueChange={ekspedisiSelected =>
+              this.ubahEkspedisi(ekspedisiSelected)
+            }
+          />
           <Jarak height={10} />
           <Text style={styles.textBold}>Biaya Ongkir :</Text>
 
@@ -87,12 +117,12 @@ class Checkout extends Component {
             <Text style={styles.text}>
               Untuk Berat : {numberWithCommas(totalBerat)} kg
             </Text>
-            <Text style={styles.textBold}>Rp. {numberWithCommas(15000)}</Text>
+            <Text style={styles.textBold}>Rp. {numberWithCommas(ongkir)}</Text>
           </View>
 
           <View style={styles.ongkir}>
             <Text style={styles.text}>Estimasi Waktu</Text>
-            <Text style={styles.textBold}>2-3 hari</Text>
+            <Text style={styles.textBold}>{estimasi}</Text>
           </View>
         </View>
 
@@ -101,7 +131,7 @@ class Checkout extends Component {
           <View style={styles.totalHarga}>
             <Text style={styles.textBold}>Total Harga :</Text>
             <Text style={styles.textBold}>
-              Rp. {numberWithCommas(totalHarga + 15000)}
+              Rp. {numberWithCommas(totalHarga + ongkir)}
             </Text>
           </View>
 
