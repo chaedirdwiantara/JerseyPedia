@@ -2,6 +2,7 @@ import {
   GET_PROVINSI,
   GET_KOTA,
   GET_KOTA_DETAIL,
+  POST_ONGKIR,
 } from '../../actions/RajaOngkirAction';
 
 const initialState = {
@@ -16,6 +17,10 @@ const initialState = {
   getKotaDetailLoading: false,
   getKotaDetailResult: false,
   getKotaDetailError: false,
+
+  ongkirLoading: false,
+  ongkirResult: false,
+  ongkirError: false,
 };
 
 export default function (state = initialState, action) {
@@ -40,6 +45,14 @@ export default function (state = initialState, action) {
         getKotaDetailLoading: action.payload.loading,
         getKotaDetailResult: action.payload.data,
         getKotaDetailError: action.payload.errorMessage,
+      };
+
+    case POST_ONGKIR:
+      return {
+        ...state,
+        ongkirLoading: action.payload.loading,
+        ongkirResult: action.payload.data,
+        ongkirError: action.payload.errorMessage,
       };
     default:
       return state;

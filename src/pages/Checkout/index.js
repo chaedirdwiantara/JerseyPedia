@@ -9,7 +9,7 @@ import {
   numberWithCommas,
   responsiveHeight,
 } from '../../utils';
-import {getKotaDetail} from '../../actions/RajaOngkirAction';
+import {getKotaDetail, postOngkir} from '../../actions/RajaOngkirAction';
 import {couriers} from '../../data/couriers';
 
 class Checkout extends Component {
@@ -50,7 +50,7 @@ class Checkout extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const {getKotaDetailResult} = this.props;
+    const {getKotaDetailResult, ongkirResult} = this.props;
 
     if (
       getKotaDetailResult &&
@@ -61,6 +61,13 @@ class Checkout extends Component {
         kota: getKotaDetailResult.type + ' ' + getKotaDetailResult.city_name,
       });
     }
+
+    if (ongkirResult && prevProps.ongkirResult !== ongkirResult) {
+      this.setState({
+        ongkir: ongkirResult.cost[0].value,
+        estimasi: ongkirResult.cost[0].etd,
+      });
+    }
   }
 
   ubahEkspedisi = ekspedisiSelected => {
@@ -69,7 +76,7 @@ class Checkout extends Component {
         ekspedisiSelected: ekspedisiSelected,
       });
 
-      // this.props.dispatch(posOngkir(this.state,ekspedisiSelected))
+      this.props.dispatch(postOngkir(this.state, ekspedisiSelected));
     }
   };
 
@@ -122,7 +129,7 @@ class Checkout extends Component {
 
           <View style={styles.ongkir}>
             <Text style={styles.text}>Estimasi Waktu</Text>
-            <Text style={styles.textBold}>{estimasi}</Text>
+            <Text style={styles.textBold}>{estimasi} hari</Text>
           </View>
         </View>
 
@@ -154,6 +161,8 @@ const mapStateToProps = state => ({
   getKotaDetailLoading: state.RajaOngkirReducer.getKotaDetailLoading,
   getKotaDetailResult: state.RajaOngkirReducer.getKotaDetailResult,
   getKotaDetailError: state.RajaOngkirReducer.getKotaDetailError,
+
+  ongkirResult: state.RajaOngkirReducer.ongkirResult,
 });
 
 export default connect(mapStateToProps, null)(Checkout);

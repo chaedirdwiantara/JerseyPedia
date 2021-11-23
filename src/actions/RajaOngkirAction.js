@@ -3,6 +3,8 @@ import {
   API_HEADER_RAJAONGKIR,
   API_RAJAONGKIR,
   API_TIMEOUT,
+  API_HEADER_RAJAONGKIR_COST,
+  ORIGIN_CITY,
 } from '../utils/constant';
 import {
   dispatchError,
@@ -14,6 +16,7 @@ import {
 export const GET_PROVINSI = 'GET_PROVINSI';
 export const GET_KOTA = 'GET_KOTA';
 export const GET_KOTA_DETAIL = 'GET_KOTA_DETAIL';
+export const POST_ONGKIR = 'POST_ONGKIR';
 
 export const getProvinsiList = () => {
   return dispatch => {
@@ -109,6 +112,58 @@ export const getKotaDetail = kota_id => {
       .catch(error => {
         // ERROR
         dispatchError(dispatch, GET_KOTA_DETAIL, error);
+
+        alert(error);
+      });
+  };
+};
+
+export const postOngkir = (data, ekspedisi) => {
+  console.log('Data : ', data);
+  console.log('Ekspedisi : ', ekspedisi);
+  return dispatch => {
+    dispatchLoading(dispatch, POST_ONGKIR);
+
+    //handle body that require PARAMS
+    const formData = new URLSearchParams();
+    formData.append('origin', ORIGIN_CITY);
+    // --> data.profile.kota
+    formData.append('destination', data.profile.kota);
+    // --> berat => data.totalBerat
+    formData.append(
+      'weight',
+      data.totalBerat < 1 ? 1000 : data.totalBerat * 1000,
+    ); //multiple 1000 cz rajaOngkir weight default write 1kg with 1000
+    // --> courier => ekspedisi.kurir
+    formData.append('courier', ekspedisi.kurir);
+
+    axios({
+      method: 'POST',
+      url: API_RAJAONGKIR + 'cost',
+      timeout: API_TIMEOUT,
+      headers: API_HEADER_RAJAONGKIR_COST,
+      data: formData,
+    })
+      .then(response => {
+        if (response.status !== 200) {
+          // ERROR
+          dispatchError(dispatch, POST_ONGKIR, response);
+        } else {
+          const ongkirs = response.data.rajaongkir.results[0].costs;
+
+          const ongkirYangDipilih = ongkirs
+            .filter(ongkir => ongkir.service === ekspedisi.service)
+            .map(filterOngkir => {
+              return filterOngkir;
+            }); //to make sure we choose service based on ekspedisi service that we choose
+
+          // BERHASIL
+          dispatchSuccess(dispatch, POST_ONGKIR, ongkirYangDipilih[0]);
+        }
+      })
+      .catch(error => {
+        // ERROR
+        dispatchError(dispatch, POST_ONGKIR, error);
 
         alert(error);
       });
