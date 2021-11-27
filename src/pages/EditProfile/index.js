@@ -79,7 +79,16 @@ class EditProfile extends Component {
 
   getImage = () => {
     launchImageLibrary(
-      {quality: 1, maxWidth: 500, maxHeight: 500, includeBase64: true},
+      {
+        mediaType: 'photo',
+        quality: 1,
+        maxWidth: 500,
+        maxHeight: 500,
+        includeBase64: true,
+        cameraType: 'front',
+        saveToPhotos: true,
+        selectionLimit: 1,
+      },
       response => {
         if (response.didCancel || response.errorCode || response.errorMessage) {
           Alert.alert('Error', 'Maaf sepertinya anda tidak memilih fotonya');
